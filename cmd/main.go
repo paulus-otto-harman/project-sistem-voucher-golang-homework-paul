@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"project/infra"
+	"project/routes"
 )
 
 func main() {
@@ -11,12 +12,9 @@ func main() {
 		log.Fatal("can't init service context %w", err)
 	}
 
-	log.Print(ctx)
+	r := routes.NewRoutes(*ctx)
 
-	//r := routes.NewRoutes(*ctx)
-	//
-	//err = r.Run(":8080")
-	//if  err != nil {
-	//	log.Fatalf("failed to run server: %v", err)
-	//}
+	if err = r.Run(":8080"); err != nil {
+		log.Fatalf("failed to run server: %v", err)
+	}
 }
