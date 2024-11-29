@@ -2,9 +2,10 @@ package database
 
 import (
 	"gorm.io/gorm"
+	"project/domain"
 )
 
 func Migrate(db *gorm.DB) error {
-	err := db.AutoMigrate()
+	err := db.AutoMigrate(&domain.Voucher{}, &domain.FreeShippingVoucher{}, &domain.DiscountVoucher{})
 	return err
 }
