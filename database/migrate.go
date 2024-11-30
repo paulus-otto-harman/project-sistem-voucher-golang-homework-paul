@@ -6,6 +6,12 @@ import (
 )
 
 func Migrate(db *gorm.DB) error {
-	err := db.AutoMigrate(&domain.Voucher{}, &domain.FreeShippingVoucher{}, &domain.DiscountVoucher{})
+	err := db.AutoMigrate(
+		&domain.Voucher{},
+		&domain.FreeShippingVoucher{},
+		&domain.DiscountVoucher{},
+		&domain.Customer{},
+		&domain.Redemption{},
+	)
 	return err
 }

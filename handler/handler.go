@@ -9,14 +9,16 @@ import (
 )
 
 type Handler struct {
-	AdminVoucher     AdminVoucherController
-	AdminVoucherUser AdminVoucherUserController
+	AdminVoucher      AdminVoucherController
+	AdminVoucherUser  AdminVoucherUserController
+	UserRedeemVoucher UserRedeemVoucherController
 }
 
 func NewHandler(service service.Service, logger *zap.Logger) *Handler {
 	return &Handler{
-		AdminVoucher:     *NewAdminVoucherController(service.Voucher, logger),
-		AdminVoucherUser: *NewAdminVoucherUserController(service.Voucher, logger),
+		AdminVoucher:      *NewAdminVoucherController(service.Voucher, logger),
+		AdminVoucherUser:  *NewAdminVoucherUserController(service.Voucher, logger),
+		UserRedeemVoucher: *NewUserRedeemVoucherController(service.RedeemVoucher, logger),
 	}
 }
 
