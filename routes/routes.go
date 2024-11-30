@@ -15,19 +15,20 @@ func NewRoutes(ctx infra.ServiceContext) *gin.Engine {
 		adminApi.DELETE("/vouchers/:id", ctx.Ctl.AdminVoucher.Delete)
 		adminApi.PUT("/vouchers/:id", ctx.Ctl.AdminVoucher.Update)
 		adminApi.GET("/vouchers", ctx.Ctl.AdminVoucher.Get)
-		adminApi.GET("/vouchers/usages", ctx.Ctl.AdminVoucherUsage.Get)
+		adminApi.GET("/vouchers/user", ctx.Ctl.AdminVoucherUser.Get)
 	}
 
 	userApi := r.Group("/user")
 	{
-		userApi.POST("/redemptions", nil)
+		userApi.POST("/redemptions", ctx.Ctl.RedeemVoucher.Create)
 		userApi.GET("/redemptions", nil)
 
+		userApi.POST("/vouchers", nil)
 		userApi.GET("/vouchers", nil)
-		userApi.GET("/vouchers/:id", nil)
-		userApi.POST("/vouchers/:id/usages", nil)
-		userApi.GET("/vouchers/usages", nil)
 	}
+
+	r.GET("/vouchers", nil)
+	r.GET("/vouchers/:id", nil)
 
 	return r
 }
