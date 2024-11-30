@@ -11,11 +11,11 @@ func NewRoutes(ctx infra.ServiceContext) *gin.Engine {
 
 	adminApi := r.Group("/admin")
 	{
-		adminApi.POST("/vouchers", nil)
-		adminApi.DELETE("/vouchers/:id", nil)
-		adminApi.PUT("/vouchers/:id", nil)
-		adminApi.GET("/vouchers", nil)
-		adminApi.GET("/vouchers/usages", nil)
+		adminApi.POST("/vouchers", ctx.Ctl.AdminVoucher.Create)
+		adminApi.DELETE("/vouchers/:id", ctx.Ctl.AdminVoucher.Delete)
+		adminApi.PUT("/vouchers/:id", ctx.Ctl.AdminVoucher.Update)
+		adminApi.GET("/vouchers", ctx.Ctl.AdminVoucher.Get)
+		adminApi.GET("/vouchers/usages", ctx.Ctl.AdminVoucherUsage.Get)
 	}
 
 	userApi := r.Group("/user")
