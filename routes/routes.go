@@ -20,7 +20,7 @@ func NewRoutes(ctx infra.ServiceContext) *gin.Engine {
 
 	userApi := r.Group("/user")
 	{
-		userApi.POST("/redemptions", ctx.Ctl.RedeemVoucher.Create)
+		userApi.POST("/redemptions", ctx.Ctl.UserRedeemVoucher.Create)
 		userApi.GET("/redemptions", nil)
 
 		userApi.POST("/vouchers", nil)

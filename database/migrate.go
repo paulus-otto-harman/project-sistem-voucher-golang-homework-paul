@@ -6,12 +6,16 @@ import (
 )
 
 func Migrate(db *gorm.DB) error {
-	err := db.AutoMigrate(
+	var err error
+
+	err = db.SetupJoinTable(&domain.Customer{}, "Redemptions", &domain.Redemption{})
+	err = db.SetupJoinTable(&domain.Customer{}, "Vouchers", &domain.Order{})
+	err = db.AutoMigrate(
 		&domain.Voucher{},
 		&domain.FreeShippingVoucher{},
 		&domain.DiscountVoucher{},
 		&domain.Customer{},
-		&domain.Redemption{},
 	)
+
 	return err
 }
