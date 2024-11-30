@@ -35,12 +35,18 @@ func ConnectDB(cfg config.Config) (*gorm.DB, error) {
 	}
 
 	// Call Migrate function to auto-migrate database schemas
-	if err = Migrate(db); err != nil {
+	if cfg.DBMigrate {
+		err = Migrate(db)
+	}
+	if err != nil {
 		return nil, fmt.Errorf("failed to migrate database: %v", err)
 	}
 
 	// Call See function to auto-migrate database schemas
-	if err = SeedAll(db); err != nil {
+	if cfg.DBSeeding {
+		err = SeedAll(db)
+	}
+	if err != nil {
 		return nil, err
 	}
 

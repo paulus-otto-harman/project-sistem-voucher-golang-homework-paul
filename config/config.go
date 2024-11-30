@@ -13,6 +13,8 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	AppDebug   bool
+	DBMigrate  bool
+	DBSeeding  bool
 }
 
 func LoadConfig() (Config, error) {
@@ -28,6 +30,9 @@ func LoadConfig() (Config, error) {
 	viper.SetDefault("DBPassword", "password")
 	viper.SetDefault("DBName", "database")
 	viper.SetDefault("AppDebug", true)
+
+	viper.SetDefault("DBMigrate", false)
+	viper.SetDefault("DBSeeding", false)
 
 	// Allow Viper to read environment variables
 	viper.AutomaticEnv()
@@ -46,6 +51,8 @@ func LoadConfig() (Config, error) {
 		DBPassword: viper.GetString("DB_PASSWORD"),
 		DBName:     viper.GetString("DB_NAME"),
 		AppDebug:   viper.GetBool("APP_DEBUG"),
+		DBMigrate:  viper.GetBool("DB_MIGRATE"),
+		DBSeeding:  viper.GetBool("DB_SEEDING"),
 	}
 
 	return config, nil
