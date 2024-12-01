@@ -2,7 +2,6 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"log"
 	"project/domain"
 )
 
@@ -15,9 +14,7 @@ func NewVoucherRepository(db *gorm.DB) *VoucherRepository {
 }
 
 func (r *VoucherRepository) Create(voucher domain.Voucher) error {
-	log.Println(voucher)
-	return nil
-	//return r.db.Create(&voucher).Error
+	return r.db.Create(&voucher).Error
 }
 
 func (r *VoucherRepository) Get(id uint) (domain.Voucher, error) {
