@@ -14,5 +14,7 @@ func NewRedeemVoucherRepository(db *gorm.DB) *RedeemVoucherRepository {
 }
 
 func (r *RedeemVoucherRepository) Create(customer domain.Customer) error {
-	return r.db.Create(&customer).Error
+	return r.db.Model(&domain.Customer{ID: 1}).
+		Association("Redemptions").
+		Append(&domain.Redemption{VoucherId: 1})
 }
