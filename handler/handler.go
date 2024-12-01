@@ -40,7 +40,6 @@ func responseCreated(c *gin.Context, data interface{}, description string) {
 
 func responseDataPage(c *gin.Context, total int64, pages int, page uint, limit uint, data interface{}) {
 	c.JSON(http.StatusOK, domain.DataPage{
-		Status:      true,
 		Total:       total,
 		Pages:       pages,
 		CurrentPage: page,
