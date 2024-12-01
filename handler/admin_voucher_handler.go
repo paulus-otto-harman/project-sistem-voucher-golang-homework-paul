@@ -41,7 +41,30 @@ func (ctrl *AdminVoucherController) Get(c *gin.Context) {
 }
 
 func (ctrl *AdminVoucherController) Update(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Update voucher"})
+	var voucher domain.Voucher
+	var err error
+
+	voucher.ID, err = util.UintID(c.Param("id"))
+	if err != nil {
+		ctrl.logger.Error("Invalid user ID", zap.Error(err))
+		responseError(c, "INVALID_ID", "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	if err = c.ShouldBindJSON(&voucher); err != nil {
+		ctrl.logger.Error("Failed to bind user data", zap.Error(err))
+		responseError(c, "BIND_ERROR", err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := ctrl.service.Update(voucher); err != nil {
+		ctrl.logger.Error("Failed to update user", zap.Error(err))
+		responseError(c, "UPDATE_ERROR", "Failed to update user", http.StatusInternalServerError)
+		return
+	}
+
+	ctrl.logger.Info("User updated successfully", zap.Any("user", voucher))
+	responseOK(c, voucher, "User updated successfully")
 }
 
 func (ctrl *AdminVoucherController) Delete(c *gin.Context) {
