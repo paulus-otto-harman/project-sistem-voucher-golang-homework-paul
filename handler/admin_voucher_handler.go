@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"project/domain"
 	"project/service"
+	"project/util"
 )
 
 type AdminVoucherController struct {
@@ -32,7 +33,7 @@ func (ctrl *AdminVoucherController) Create(c *gin.Context) {
 	}
 
 	ctrl.logger.Info("User created successfully", zap.Any("voucher", voucher))
-	responseOK(c, voucher, "Voucher created successfully")
+	responseCreated(c, voucher, "Voucher created successfully")
 }
 
 func (ctrl *AdminVoucherController) Get(c *gin.Context) {
@@ -44,5 +45,20 @@ func (ctrl *AdminVoucherController) Update(c *gin.Context) {
 }
 
 func (ctrl *AdminVoucherController) Delete(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Delete voucher"})
+	id, err := util.UintID(c.Param("id"))
+	if err != nil {
+		ctrl.logger.Error("Invalid voucher ID", zap.Error(err))
+		responseError(c, "INVALID_ID", "Invalid voucher ID", http.StatusBadRequest)
+		return
+	}
+
+	if err := ctrl.service.Delete(id); err != nil {
+		ctrl.logger.Error("Failed to delete voucher", zap.Error(err))
+		responseError(c, "DELETE_ERROR", "Failed to delete voucher", http.StatusInternalServerError)
+		return
+	}
+
+	ctrl.logger.Info("Voucher deleted successfully", zap.Uint("voucherID", id))
+	responseOK(c, nil, "Voucher deleted successfully")
+
 }

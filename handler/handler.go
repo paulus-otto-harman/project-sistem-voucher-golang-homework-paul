@@ -30,6 +30,14 @@ func responseOK(c *gin.Context, data interface{}, description string) {
 	})
 }
 
+func responseCreated(c *gin.Context, data interface{}, description string) {
+	c.JSON(http.StatusCreated, domain.HTTPResponse{
+		Status:      true,
+		Description: description,
+		Data:        data,
+	})
+}
+
 func responseError(c *gin.Context, errorCode string, description string, httpStatusCode int) {
 	c.JSON(httpStatusCode, domain.HTTPResponse{
 		Status:      false,
