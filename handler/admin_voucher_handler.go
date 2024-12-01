@@ -37,7 +37,13 @@ func (ctrl *AdminVoucherController) Create(c *gin.Context) {
 }
 
 func (ctrl *AdminVoucherController) Index(c *gin.Context) {
-	vouchers, err := ctrl.service.All()
+	page, err := util.Uint(c.Query("p"))
+	limit, err := util.Uint(c.Query("l"))
+	isActive := c.Query("active")
+	area := c.Query("area")
+	voucherType := c.Query("type")
+
+	total, pages, currentPage, itemsPerPage, vouchers, err := ctrl.service.All(page, limit, isActive, area, voucherType)
 	if err != nil {
 		ctrl.logger.Error("Failed to get vouchers", zap.Error(err))
 		responseError(c, "GET_ERROR", "Failed to get vouchers", http.StatusInternalServerError)
@@ -45,14 +51,14 @@ func (ctrl *AdminVoucherController) Index(c *gin.Context) {
 	}
 
 	ctrl.logger.Info("Vouchers retrieved successfully", zap.Any("vouchers", vouchers))
-	responseOK(c, vouchers, "Voucher created successfully")
+	responseDataPage(c, total, pages, currentPage, itemsPerPage, vouchers)
 }
 
 func (ctrl *AdminVoucherController) Update(c *gin.Context) {
 	var voucher domain.Voucher
 	var err error
 
-	voucher.ID, err = util.UintID(c.Param("id"))
+	voucher.ID, err = util.Uint(c.Param("id"))
 	if err != nil {
 		ctrl.logger.Error("Invalid user ID", zap.Error(err))
 		responseError(c, "INVALID_ID", "Invalid user ID", http.StatusBadRequest)
@@ -76,7 +82,7 @@ func (ctrl *AdminVoucherController) Update(c *gin.Context) {
 }
 
 func (ctrl *AdminVoucherController) Delete(c *gin.Context) {
-	id, err := util.UintID(c.Param("id"))
+	id, err := util.Uint(c.Param("id"))
 	if err != nil {
 		ctrl.logger.Error("Invalid voucher ID", zap.Error(err))
 		responseError(c, "INVALID_ID", "Invalid voucher ID", http.StatusBadRequest)

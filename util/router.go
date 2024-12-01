@@ -4,8 +4,8 @@ import (
 	"strconv"
 )
 
-func UintID(requestParam string) (uint, error) {
-	id, err := strconv.Atoi(requestParam)
+func Uint(param string) (uint, error) {
+	id, err := strconv.Atoi(param)
 	if err != nil {
 		return 0, err
 	}
