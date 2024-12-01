@@ -2,7 +2,9 @@ package repository
 
 import (
 	"gorm.io/gorm"
+	"math"
 	"project/domain"
+	"project/util"
 )
 
 type VoucherRepository struct {
@@ -17,10 +19,14 @@ func (r *VoucherRepository) Create(voucher domain.Voucher) error {
 	return r.db.Create(&voucher).Error
 }
 
-func (r *VoucherRepository) All() ([]domain.Voucher, error) {
+func (r *VoucherRepository) All(page uint, limit uint, isActive string, area string, voucherType string) (int64, int, uint, uint, []domain.Voucher, error) {
+	var count int64
+	r.db.Model(&domain.Voucher{}).Count(&count)
+	pages := int(math.Ceil(float64(count) / float64(limit)))
+
 	var vouchers []domain.Voucher
-	result := r.db.Find(&vouchers)
-	return vouchers, result.Error
+	result := r.db.Scopes(util.Paginate(page, limit)).Find(&vouchers)
+	return count, pages, page, limit, vouchers, result.Error
 }
 
 func (r *VoucherRepository) Get(id uint) (domain.Voucher, error) {

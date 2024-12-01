@@ -1,13 +1,18 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"project/infra"
 	"project/routes"
 )
 
 func main() {
-	ctx, err := infra.NewServiceContext()
+	migrateDb := flag.Bool("m", false, "use this flag to migrate database")
+	seedDb := flag.Bool("s", false, "use this flag to seed database")
+	flag.Parse()
+
+	ctx, err := infra.NewServiceContext(*migrateDb, *seedDb)
 	if err != nil {
 		log.Fatal("can't init service context %w", err)
 	}

@@ -17,7 +17,7 @@ type Config struct {
 	DBSeeding  bool
 }
 
-func LoadConfig() (Config, error) {
+func LoadConfig(migrateDb bool, seedDb bool) (Config, error) {
 
 	localEnv := viper.New()
 	localEnv.SetConfigType("dotenv")
@@ -31,9 +31,9 @@ func LoadConfig() (Config, error) {
 	viper.SetDefault("DBName", "database")
 	viper.SetDefault("AppDebug", true)
 
-	viper.SetDefault("DBMigrate", false)
-	viper.SetDefault("DBSeeding", false)
-
+	viper.SetDefault("DB_MIGRATE", migrateDb)
+	viper.SetDefault("DB_SEEDING", seedDb)
+	
 	// Allow Viper to read environment variables
 	viper.AutomaticEnv()
 

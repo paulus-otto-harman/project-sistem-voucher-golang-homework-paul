@@ -38,6 +38,17 @@ func responseCreated(c *gin.Context, data interface{}, description string) {
 	})
 }
 
+func responseDataPage(c *gin.Context, total int64, pages int, page uint, limit uint, data interface{}) {
+	c.JSON(http.StatusOK, domain.DataPage{
+		Status:      true,
+		Total:       total,
+		Pages:       pages,
+		CurrentPage: page,
+		Limit:       limit,
+		Data:        data,
+	})
+}
+
 func responseError(c *gin.Context, errorCode string, description string, httpStatusCode int) {
 	c.JSON(httpStatusCode, domain.HTTPResponse{
 		Status:      false,

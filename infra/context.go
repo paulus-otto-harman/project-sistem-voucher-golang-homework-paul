@@ -16,14 +16,14 @@ type ServiceContext struct {
 	Log *zap.Logger
 }
 
-func NewServiceContext() (*ServiceContext, error) {
+func NewServiceContext(migrateDb bool, seedDb bool) (*ServiceContext, error) {
 
 	handlerError := func(err error) (*ServiceContext, error) {
 		return nil, err
 	}
 
 	// instance config
-	config, err := config.LoadConfig()
+	config, err := config.LoadConfig(migrateDb, seedDb)
 	if err != nil {
 		handlerError(err)
 	}
