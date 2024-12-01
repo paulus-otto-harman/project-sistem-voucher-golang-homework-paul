@@ -1,10 +1,12 @@
 package repository
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"math"
 	"project/domain"
 	"project/util"
+	"time"
 )
 
 type VoucherRepository struct {
@@ -20,12 +22,15 @@ func (r *VoucherRepository) Create(voucher domain.Voucher) error {
 }
 
 func (r *VoucherRepository) All(page uint, limit uint, isActive string, area string, voucherType string) (int64, int, uint, uint, []domain.Voucher, error) {
+	//voucher := domain.Voucher{Area: area}
+
 	var count int64
-	r.db.Model(&domain.Voucher{}).Count(&count)
+	r.db.Model(&domain.Voucher{}).Scopes(withArea(area), withExpiry(isActive)).Count(&count)
 	pages := int(math.Ceil(float64(count) / float64(limit)))
 
 	var vouchers []domain.Voucher
-	result := r.db.Scopes(util.Paginate(page, limit)).Find(&vouchers)
+
+	result := r.db.Scopes(util.Paginate(page, limit), withArea(area), withExpiry(isActive)).Find(&vouchers)
 	return count, pages, page, limit, vouchers, result.Error
 }
 
@@ -41,4 +46,23 @@ func (r *VoucherRepository) Update(voucher domain.Voucher) error {
 
 func (r *VoucherRepository) Delete(id uint) error {
 	return r.db.Delete(&domain.Voucher{}, id).Error
+}
+
+func withArea(area string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("area ILIKE ?", fmt.Sprintf("%%%s%%", area))
+	}
+}
+
+func withExpiry(isActive string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		switch isActive {
+		case "0":
+			return db.Where("expires_at <= ?", time.Now())
+		case "1":
+			return db.Where("starts_at <= ? AND expires_at >= ?", time.Now(), time.Now())
+		default:
+			return db
+		}
+	}
 }
