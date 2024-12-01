@@ -17,6 +17,12 @@ func (r *VoucherRepository) Create(voucher domain.Voucher) error {
 	return r.db.Create(&voucher).Error
 }
 
+func (r *VoucherRepository) All() ([]domain.Voucher, error) {
+	var vouchers []domain.Voucher
+	result := r.db.Find(&vouchers)
+	return vouchers, result.Error
+}
+
 func (r *VoucherRepository) Get(id uint) (domain.Voucher, error) {
 	var voucher domain.Voucher
 	err := r.db.First(&voucher, id).Error

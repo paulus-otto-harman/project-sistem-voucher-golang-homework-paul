@@ -36,8 +36,16 @@ func (ctrl *AdminVoucherController) Create(c *gin.Context) {
 	responseCreated(c, voucher, "Voucher created successfully")
 }
 
-func (ctrl *AdminVoucherController) Get(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "List of vouchers"})
+func (ctrl *AdminVoucherController) Index(c *gin.Context) {
+	vouchers, err := ctrl.service.All()
+	if err != nil {
+		ctrl.logger.Error("Failed to get vouchers", zap.Error(err))
+		responseError(c, "GET_ERROR", "Failed to get vouchers", http.StatusInternalServerError)
+		return
+	}
+
+	ctrl.logger.Info("Vouchers retrieved successfully", zap.Any("vouchers", vouchers))
+	responseOK(c, vouchers, "Voucher created successfully")
 }
 
 func (ctrl *AdminVoucherController) Update(c *gin.Context) {

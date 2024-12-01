@@ -14,7 +14,7 @@ func NewRoutes(ctx infra.ServiceContext) *gin.Engine {
 		adminApi.POST("/vouchers", ctx.Ctl.AdminVoucher.Create)
 		adminApi.DELETE("/vouchers/:id", ctx.Ctl.AdminVoucher.Delete)
 		adminApi.PUT("/vouchers/:id", ctx.Ctl.AdminVoucher.Update)
-		adminApi.GET("/vouchers", ctx.Ctl.AdminVoucher.Get)
+		adminApi.GET("/vouchers", ctx.Ctl.AdminVoucher.Index)
 		adminApi.GET("/vouchers/user", ctx.Ctl.AdminVoucherUser.Get)
 	}
 

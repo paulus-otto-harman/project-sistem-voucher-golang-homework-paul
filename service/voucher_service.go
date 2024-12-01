@@ -7,6 +7,7 @@ import (
 
 type VoucherService interface {
 	Create(voucher domain.Voucher) error
+	All() ([]domain.Voucher, error)
 	Get(id uint) (domain.Voucher, error)
 	Update(voucher domain.Voucher) error
 	Delete(id uint) error
@@ -22,6 +23,10 @@ func NewVoucherService(repo repository.VoucherRepository) VoucherService {
 
 func (s *voucherService) Create(voucher domain.Voucher) error {
 	return s.repo.Create(voucher)
+}
+
+func (s *voucherService) All() ([]domain.Voucher, error) {
+	return s.repo.All()
 }
 
 func (s *voucherService) Get(id uint) (domain.Voucher, error) {
