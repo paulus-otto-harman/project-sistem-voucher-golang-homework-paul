@@ -22,15 +22,13 @@ func (r *VoucherRepository) Create(voucher domain.Voucher) error {
 }
 
 func (r *VoucherRepository) All(page uint, limit uint, isActive string, area string, voucherType string) (int64, int, uint, uint, []domain.Voucher, error) {
-	//voucher := domain.Voucher{Area: area}
-
 	var count int64
-	r.db.Model(&domain.Voucher{}).Scopes(withArea(area), withExpiry(isActive)).Count(&count)
+	r.db.Model(&domain.Voucher{}).Scopes(withArea(area), withExpiry(isActive), hasType(voucherType)).Count(&count)
 	pages := int(math.Ceil(float64(count) / float64(limit)))
 
 	var vouchers []domain.Voucher
 
-	result := r.db.Scopes(util.Paginate(page, limit), withArea(area), withExpiry(isActive)).Find(&vouchers)
+	result := r.db.Scopes(util.Paginate(page, limit), withArea(area), withExpiry(isActive), hasType(voucherType)).Find(&vouchers)
 	return count, pages, page, limit, vouchers, result.Error
 }
 
@@ -61,6 +59,19 @@ func withExpiry(isActive string) func(db *gorm.DB) *gorm.DB {
 			return db.Where("expires_at <= ?", time.Now())
 		case "1":
 			return db.Where("starts_at <= ? AND expires_at >= ?", time.Now(), time.Now())
+		default:
+			return db
+		}
+	}
+}
+
+func hasType(voucherType string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		switch voucherType {
+		case "0":
+			return db.Where("redeem_points IS NULL")
+		case "1":
+			return db.Where("redeem_points IS NOT NULL")
 		default:
 			return db
 		}

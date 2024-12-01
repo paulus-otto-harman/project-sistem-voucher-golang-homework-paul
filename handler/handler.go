@@ -12,6 +12,7 @@ type Handler struct {
 	AdminVoucher          AdminVoucherController
 	AdminVoucherCustomer  AdminVoucherCustomerController
 	CustomerRedeemVoucher CustomerRedeemVoucherController
+	Voucher               VoucherController
 }
 
 func NewHandler(service service.Service, logger *zap.Logger) *Handler {
@@ -19,6 +20,7 @@ func NewHandler(service service.Service, logger *zap.Logger) *Handler {
 		AdminVoucher:          *NewAdminVoucherController(service.Voucher, logger),
 		AdminVoucherCustomer:  *NewAdminVoucherCustomerController(service.Voucher, logger),
 		CustomerRedeemVoucher: *NewCustomerRedeemVoucherController(service.RedeemVoucher, logger),
+		Voucher:               *NewVoucherController(service.Voucher, logger),
 	}
 }
 

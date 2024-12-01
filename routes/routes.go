@@ -27,7 +27,7 @@ func NewRoutes(ctx infra.ServiceContext) *gin.Engine {
 		userApi.GET("/vouchers", nil)
 	}
 
-	r.GET("/vouchers", nil)
+	r.GET("/vouchers", ctx.Ctl.Voucher.Index)
 	r.GET("/vouchers/:id", nil)
 
 	return r
