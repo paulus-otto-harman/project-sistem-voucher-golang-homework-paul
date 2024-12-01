@@ -6,7 +6,7 @@ import (
 )
 
 type RedeemVoucherService interface {
-	Create(customer domain.Customer) error
+	Create(voucher domain.Voucher) error
 }
 
 type redeemVoucherService struct {
@@ -17,6 +17,6 @@ func NewRedeemVoucherService(repo repository.RedeemVoucherRepository) RedeemVouc
 	return &redeemVoucherService{repo}
 }
 
-func (s *redeemVoucherService) Create(customer domain.Customer) error {
-	return s.repo.Create(customer)
+func (s *redeemVoucherService) Create(voucher domain.Voucher) error {
+	return s.repo.Create(voucher)
 }
